@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Generowanie losowych liczb</title>
+</head>
+<body>
+    <h1>Generowanie losowych liczb</h1>
+    <script>
+        function generateRandom(min, max) {
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        }
+
+        function checkRandomNumbers() {
+            const numbers = [];
+            let countAboveTen = 0;
+
+            for (let i = 0; i < 10; i++) {
+                const randomNumber = generateRandom(1, 20);
+                numbers.push(randomNumber);
+                if (randomNumber > 10) {
+                    countAboveTen++;
+                }
+            }
+
+            if (countAboveTen >= 5) {
+                document.write("Udało się");
+            } else {
+               document.write("Niestety nie");
+            }
+        }
+
+        checkRandomNumbers();
+    </script>
+</body>
+</html>
