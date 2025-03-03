@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Obliczanie pola prostokąta</title>
+</head>
+<body>
+    <h1>Obliczanie pola prostokąta</h1>
+    <script>
+        function rectangleArea(a = 1, b = 1) {
+            const area = a * b;
+            document.write(`Pole prostokąta o bokach: ${a} i ${b} wynosi: ${area}`);
+        }
+
+        // Wywołanie funkcji przy ładowaniu strony
+        const a = prompt("Wprowadź pierwszy bok prostokąta:", "1");
+        const b = prompt("Wprowadź drugi bok prostokąta:", "1");
+        rectangleArea(parseFloat(a), parseFloat(b));
+    </script>
+</body>
+</html>
