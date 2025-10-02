@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" name="Kamil Joniec">
+  <title>Kalkulator dni</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1>Kalkulator dni</h1>
+
+  <label for="wydarzenie">Wybierz wydarzenie z listy:</label><br>
+  <select id="wydarzenie">
+    <option value="">wybierz</option>
+    <option value="2025-10-14">Dzień Edukacji Narodowej</option>
+    <option value="2025-11-11">Narodowe Święto Niepodległości</option>
+    <option value="2026-01-20">ferie (20 stycznia)</option>
+    <option value="2025-12-25">Boże Narodzenie</option>
+    <option value="2026-06-27">Wakacje (26 czerwca)</option>
+  </select><br>
+
+  <label for="data">Lub wybierz datę z kalendarza:</label><br>
+  <input type="date" id="data"><br>
+
+  <button onclick="calculateDays()">Oblicz ile dni zostało</button>
+
+  <div id="obliczenia"></div>
+
+  <script src="script.js"></script>
+  <footer>Kamil Joniec 4i</footer>
+</body>
+</html>
+
+
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  font-size: large;
+  padding-top: 50px;
+  background-color: rgb(34, 38, 41);
+  color: white;
+}
+
+h1 {
+  font-size: 2em;
+  margin-bottom: 30px;
+
+}
+
+button{
+    background-color: rgb(96, 66, 202);
+    color: #f0f0f0;
+    margin: 10px;
+    padding: 10px;
+    font-size: 1em;
+    width: 200px;
+    height: 75px;
+}
+
+select,
+input[type="date"] {
+  margin-top: 10px;
+  margin-bottom: 30px;
+  padding: 10px;
+  font-size: 1em;
+}
+
+#obliczenia {
+  margin-top: 20px;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgb(0, 0, 0);
+    color: white;
+    padding: 15px;
+    text-align: center;
+  }
+
+
+function calculateDays() {
+    const presetEl = document.getElementById("wydarzenie");
+    const customEl = document.getElementById("data");
+    const result = document.getElementById("obliczenia");
+  
+    const eventDateStr = presetEl.value;       
+    const customStartStr = customEl.value;  
+  
+    if (!eventDateStr) {
+      result.innerText = "Wybierz wydarzenie z listy.";
+      return;
+    }
+  
+    
+    let startDateStr;
+    if (customStartStr) {
+      startDateStr = customStartStr;
+    } else {
+      const now = new Date();
+      const yyyy = now.getFullYear();
+      const mm = String(now.getMonth() + 1).padStart(2, "0");
+      const dd = String(now.getDate()).padStart(2, "0");
+      startDateStr = `${yyyy}-${mm}-${dd}`;
+    }
+  
+    
+    function daysBetween(fromStr, toStr) {
+      const [y1, m1, d1] = fromStr.split("-").map(Number);
+      const [y2, m2, d2] = toStr.split("-").map(Number);
+      const fromUTC = Date.UTC(y1, m1 - 1, d1);
+      const toUTC = Date.UTC(y2, m2 - 1, d2);
+      return Math.floor((toUTC - fromUTC) / 86400000);
+    }
+  
+    const diffDays = daysBetween(startDateStr, eventDateStr);
+  
+    if (diffDays > 0) {
+      result.innerText = `Zostało ${diffDays} dni.`;
+    } else if (diffDays === 0) {
+      result.innerText = `To jest dziś!`;
+    } else {
+      result.innerText = `Wydarzenie minęło ${Math.abs(diffDays)} dni temu.`;
+    }
+  }
+  
