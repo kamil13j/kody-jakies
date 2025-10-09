@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Losowanie z tablic</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background-color: #2c2c2c;
+  color: #ccc;
+}
+
+.container {
+  width: 600px;
+  margin: 20px auto;
+  background: rgb(24, 24, 24);
+  border: 2px solid rgb(0, 0, 0);
+  border-radius: 12px;
+  padding: 15px;
+  text-align: center;
+}
+
+fieldset {
+  border: 1px solid rgb(53, 4, 4);
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+input[type="text"], input[type="number"] {
+  padding: 5px;
+  border-radius: 6px;
+  border: 1px solid #888;
+  width: 120px;
+}
+
+button {
+  padding: 5px 10px;
+  margin: 5px;
+  border-radius: 8px;
+  border: 1px solid rgb(0, 0, 0);
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #e90000;
+}
+
+.result, .tablica, .aktualna {
+  border: 1px solid rgb(116, 116, 116);
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 10px;
+  text-align: left;
+}
+
+h1 {
+  font-size: 1.6em;
+  margin-bottom: 10px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Losowanie elementów z tablicy</h1>
+
+  <fieldset>
+    <label>wprowadź nazwisko: </label>
+    <input type="text" id="nazwisko">
+    <button onclick="dodajOsobe()">dodaj osobę</button>
+    <button onclick="pokazTablice()">losowanie</button>
+    <p>lista osób zawiera <span id="iloscOsob">0</span> osób</p>
+  </fieldset>
+
+  <div class="tablica">
+    <strong>Tablica z nazwiskami:</strong>
+    <p id="listaNazwisk"></p>
+  </div>
+
+  <div>
+    <label>ile osób wylosować? </label>
+    <input type="number" id="iloscLosowania" value="1" min="1">
+    <button onclick="zatwierdzLiczbe()">zatwierdź</button>
+  </div>
+
+  <div class="aktualna">
+    <strong>aktualna tablica</strong>
+    <p id="aktualnaTablica"></p>
+  </div>
+
+  <div>
+    <button onclick="losuj()">Losuj</button>
+  </div>
+
+  <div class="result">
+    <strong>Wylosowane osoby:</strong>
+    <ol id="wyniki"></ol>
+    <p id="brak"></p>
+  </div>
+</div>
+
+<script>
+let osoby = [
+  "Kowal", "Lis", "Nowak", "Nowakowski", "Iksiński",
+  "Milewski", "Kamińska", "Lasik", "Barczyński",
+  "Lewandowski", "Woźnicka", "Kotuła"
+];
+
+let liczbaLosowan = 1;
+
+window.onload = () => {
+  aktualizujListe();
+  document.getElementById("aktualnaTablica").innerText = osoby.join(", ");
+};
+
+function dodajOsobe() {
+  const input = document.getElementById('nazwisko');
+  const nazwisko = input.value.trim().toUpperCase();
+  if (nazwisko) {
+    osoby = [...osoby, nazwisko]; 
+    input.value = '';
+    aktualizujListe();
+  }
+}
+
+function pokazTablice() {
+  document.getElementById('listaNazwisk').innerText = osoby.join(", ");
+}
+
+function zatwierdzLiczbe() {
+  const ilosc = parseInt(document.getElementById('iloscLosowania').value);
+  if (ilosc > 0 && ilosc <= osoby.length) {
+    liczbaLosowan = ilosc;
+    document.getElementById('aktualnaTablica').innerText = osoby.join(", ");
+  } else {
+    alert('Podaj poprawną liczbę (nie większą niż liczba osób na liście)');
+  }
+}
+
+function losuj() {
+  if (osoby.length === 0) {
+    document.getElementById('brak').innerText = 'Brak nazwisk do losowania';
+    return;
+  }
+
+  const kopia = [...osoby];
+  const wynik = Array.from({ length: liczbaLosowan }, () => {
+    const index = Math.floor(Math.random() * kopia.length);
+    return kopia.splice(index, 1)[0];
+  });
+
+  const lista = document.getElementById('wyniki');
+  lista.innerHTML = wynik.map(osoba => `<li>${osoba}</li>`).join("");
+
+  document.getElementById('brak').innerText = wynik.length === 0
+    ? 'brak nazwisk do losowania'
+    : '';
+}
+
+function aktualizujListe() {
+  document.getElementById('iloscOsob').innerText = osoby.length;
+  document.getElementById('listaNazwisk').innerText = osoby.map(o => o).join(", ");
+}
+</script>
+
+</body>
+</html>
