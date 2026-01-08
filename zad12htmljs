@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Kami Joniec 4i" />
+    <meta name="description" content="Zadanie 12 - Konwerter i kalkulator dat - [Klasa]" />
+    <title>Zadanie 12 - Konwerter i kalkulator dat</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .result-box {
+        background-color: #f8f9fa;
+        border-left: 4px solid #0d6efd;
+        padding: 15px;
+        margin-top: 15px;
+        border-radius: 5px;
+      }
+      .result-item {
+        margin: 8px 0;
+        font-size: 1.1em;
+      }
+      .result-label {
+        font-weight: bold;
+        color: #495057;
+      }
+      .input-group-custom {
+        max-width: 150px;
+        margin: 5px;
+      }
+      .footer-info {
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 2px solid #dee2e6;
+      }
+      .footer-info input {
+        max-width: 200px;
+        display: inline-block;
+        margin: 0 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-10">
+          <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+              <h2 class="mb-0">Zadanie 12: Konwerter i kalkulator dat</h2>
+            </div>
+            <div class="card-body">
+              <p class="text-muted">
+                <strong>Cel:</strong> Stwórz aplikację do konwersji dat i obliczania różnic między datami używając metod obiektu Date.
+              </p>
+
+              <div class="mb-4">
+                <h5>Wprowadź datę:</h5>
+                <div class="d-flex flex-wrap align-items-end">
+                  <div class="input-group-custom">
+                    <label for="day" class="form-label">Dzień:</label>
+                    <input type="number" class="form-control" id="day" min="1" max="31" placeholder="DD" />
+                  </div>
+                  <div class="input-group-custom">
+                    <label for="month" class="form-label">Miesiąc:</label>
+                    <input type="number" class="form-control" id="month" min="1" max="12" placeholder="MM" />
+                  </div>
+                  <div class="input-group-custom">
+                    <label for="year" class="form-label">Rok:</label>
+                    <input type="number" class="form-control" id="year" min="1900" max="2100" placeholder="YYYY" />
+                  </div>
+                </div>
+              </div>
+
+              <button class="btn btn-primary" id="convertBtn">Konwertuj i oblicz</button>
+              <button class="btn btn-secondary" id="clearBtn">Wyczyść</button>
+
+              <div id="results" class="result-box" style="display: none">
+                <h5 class="mb-3">Wyniki:</h5>
+                <div class="result-item">
+                  <span class="result-label">Format DD.MM.YYYY:</span>
+                  <span id="format1"></span>
+                </div>
+                <div class="result-item">
+                  <span class="result-label">Format YYYY-MM-DD:</span>
+                  <span id="format2"></span>
+                </div>
+                <div class="result-item">
+                  <span class="result-label">Format pełny:</span>
+                  <span id="formatFull"></span>
+                </div>
+                <div class="result-item">
+                  <span class="result-label">Dzień tygodnia:</span>
+                  <span id="dayOfWeek"></span>
+                </div>
+                <div class="result-item">
+                  <span class="result-label">Różnica w dniach:</span>
+                  <span id="daysDifference"></span>
+                </div>
+                <div class="result-item">
+                  <span class="result-label">Relacja czasowa:</span>
+                  <span id="timeRelation"></span>
+                </div>
+                <div class="result-item">
+                  <span class="result-label">Komunikat:</span>
+                  <span id="message" style="font-style: italic;"></span>
+                </div>
+              </div>
+
+              <div class="footer-info">
+                <h6>Informacje o autorze: Kami Joniec 4i</h6>
+               
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="zad12.js" defer></script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+const dayInput = document.getElementById("day");
+const monthInput = document.getElementById("month");
+const yearInput = document.getElementById("year");
+
+const convertBtn = document.getElementById("convertBtn");
+const clearBtn = document.getElementById("clearBtn");
+
+const resultsBox = document.getElementById("results");
+
+const format1 = document.getElementById("format1");
+const format2 = document.getElementById("format2");
+const formatFull = document.getElementById("formatFull");
+const dayOfWeek = document.getElementById("dayOfWeek");
+const daysDifference = document.getElementById("daysDifference");
+const timeRelation = document.getElementById("timeRelation");
+const message = document.getElementById("message");
+
+const days = [
+  "Niedziela",
+  "Poniedziałek",
+  "Wtorek",
+  "Środa",
+  "Czwartek",
+  "Piątek",
+  "Sobota"
+];
+
+const months = [
+  "stycznia",
+  "lutego",
+  "marca",
+  "kwietnia",
+  "maja",
+  "czerwca",
+  "lipca",
+  "sierpnia",
+  "września",
+  "października",
+  "listopada",
+  "grudnia"
+];
+
+function convertAndCalculate() {
+  const day = parseInt(dayInput.value);
+  const month = parseInt(monthInput.value);
+  const year = parseInt(yearInput.value);
+
+  if (!day || !month || !year) {
+    alert("Uzupełnij dzień, miesiąc i rok!");
+    return;
+  }
+
+  const inputDate = new Date(year, month - 1, day);
+
+  if (
+    inputDate.getFullYear() !== year ||
+    inputDate.getMonth() !== month - 1 ||
+    inputDate.getDate() !== day
+  ) {
+    alert("Wprowadzona data jest niepoprawna!");
+    return;
+  }
+
+  const today = new Date();
+
+  const dd = String(day).padStart(2, "0");
+  const mm = String(month).padStart(2, "0");
+
+  format1.textContent = `${dd}.${mm}.${year}`;
+  format2.textContent = `${year}-${mm}-${dd}`;
+  formatFull.textContent = `${day} ${months[inputDate.getMonth()]} ${year}`;
+
+  dayOfWeek.textContent = days[inputDate.getDay()];
+
+  const diffMs = inputDate.getTime() - today.getTime();
+  const diffDays = Math.floor(Math.abs(diffMs) / (1000 * 60 * 60 * 24));
+
+  daysDifference.textContent = diffDays;
+
+  if (diffMs > 0) {
+    timeRelation.textContent = "Przyszłość";
+    message.textContent = `Do tej daty pozostało ${diffDays} dni.`;
+  } else if (diffMs < 0) {
+    timeRelation.textContent = "Przeszłość";
+    message.textContent = `Od tej daty minęło ${diffDays} dni.`;
+  } else {
+    timeRelation.textContent = "Dzisiaj";
+    message.textContent = "To jest dzisiejsza data!";
+  }
+
+  resultsBox.style.display = "block";
+}
+
+function clearAll() {
+  dayInput.value = "";
+  monthInput.value = "";
+  yearInput.value = "";
+
+  resultsBox.style.display = "none";
+}
+
+convertBtn.addEventListener("click", convertAndCalculate);
+clearBtn.addEventListener("click", clearAll);
